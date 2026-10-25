@@ -203,7 +203,28 @@ let S,name='',school='',mute=false,AC,AR=false,vDone=false,ytL=false;
 
 /* Som */
 const beep=(f,d=.12)=>{if(mute)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain();o.frequency.value=f;g.gain.value=.06;o.connect(g);g.connect(AC.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+d);o.stop(AC.currentTime+d)}catch(e){}};
-$('#mute').onclick=e=>{mute=!mute;e.target.textContent=mute?'🔇':'🔊'};
+$('#mute').onclick=e=>{mute=!mute;e.target.textContent=mute?'🔇':'🔊';if(mus)mus.g.gain.setTargetAtTime(mute?0:.35,AC.currentTime,.05)};
+
+/* Música de fundo: chiptune original gerado no navegador (sem arquivo de áudio) */
+const CH=[[57,60,64],[57,60,65],[60,64,67],[59,62,67]],BS=[45,41,48,43],AP=[0,1,2,1,0,1,2,1];
+const LD=[76,0,79,0,81,79,76,0, 81,0,79,76,74,0,72,0, 79,0,76,0,79,81,79,0, 74,76,79,76,74,0,72,0];
+let mus=null;
+const mf=n=>440*Math.pow(2,(n-69)/12);
+function note(t,n,d,type,v){const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.value=mf(n);g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(mus.g);o.start(t);o.stop(t+d)}
+function noise(t,d,v,hp){const s=AC.createBufferSource();s.buffer=mus.nb;const g=AC.createGain();g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);let n=s;if(hp){const f=AC.createBiquadFilter();f.type='highpass';f.frequency.value=hp;s.connect(f);n=f}n.connect(g);g.connect(mus.g);s.start(t);s.stop(t+d)}
+function kick(t){const o=AC.createOscillator(),g=AC.createGain();o.frequency.setValueAtTime(140,t);o.frequency.exponentialRampToValueAtTime(40,t+.12);g.gain.setValueAtTime(.5,t);g.gain.exponentialRampToValueAtTime(.0001,t+.15);o.connect(g);g.connect(mus.g);o.start(t);o.stop(t+.16)}
+function step(i,t){const b=i>>3,k=i&7;
+note(t,CH[b][AP[k]],.2,'square',.05);
+if(k%2===0)note(t,BS[b]+(k===6?12:0),.22,'triangle',.22);
+if(LD[i])note(t,LD[i],.2,'square',.07);
+if(k===0||k===4)kick(t);if(k===2||k===6)noise(t,.12,.18);if(k%2)noise(t,.04,.08,7000)}
+function musicStart(){if(mus)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();AC.resume();
+const g=AC.createGain();g.gain.value=mute?0:.35;g.connect(AC.destination);
+const nb=AC.createBuffer(1,AC.sampleRate*.3|0,AC.sampleRate),d=nb.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
+mus={g,nb,i:0,t:AC.currentTime+.1};
+mus.id=setInterval(()=>{while(mus.t<AC.currentTime+.4){step(mus.i%32,mus.t);mus.i++;mus.t+=60/144/2}},100)}catch(e){mus=null}}
+function musicStop(){if(!mus)return;const m=mus;mus=null;clearInterval(m.id);try{m.g.gain.setTargetAtTime(0,AC.currentTime,.15);setTimeout(()=>m.g.disconnect(),900)}catch(e){}}
+document.addEventListener('visibilitychange',()=>{if(AC&&mus){document.hidden?AC.suspend():AC.resume()}});
 
 /* Fundo animado e confete */
 const RM=matchMedia('(prefers-reduced-motion:reduce)').matches,cv=$('#bg'),cx=cv.getContext('2d');let P=[],B=[];
@@ -219,7 +240,7 @@ addEventListener('resize',rs);rs();draw();
 /* Tabuleiro (dados fixos, sem conteúdo do usuário) */
 $('#board').innerHTML='<div class="fill" id="fill"></div><div class="tok" id="tok">🕵️</div>'+ST.map((s,i)=>`<div class="node" id="n${i}"><b>${s.i}</b>${s.n}</div>`).join('');
 
-const show=id=>{AR=id!=='setup';document.body.classList.toggle('arcade',AR);$$('.screen').forEach(e=>e.classList.toggle('on',e.id===id))};
+const show=id=>{if(id!=='game')musicStop();AR=id!=='setup';document.body.classList.toggle('arcade',AR);$$('.screen').forEach(e=>e.classList.toggle('on',e.id===id))};
 const shake=el=>{el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake')};
 const hud=()=>{$('#hXp').textContent=S.xp;$('#hCombo').textContent='x'+S.combo};
 
@@ -254,7 +275,7 @@ $('#endXp').textContent=S.ok+' de 9 perguntas certas, '+S.xp+' de 1000 pontos';
 $('#certBtn').style.display=pass?'inline-block':'none';$('#certNote').style.display=pass?'block':'none';
 if(pass){beep(523,.15);setTimeout(()=>beep(784,.3),150);burst(innerWidth/2,innerHeight/3)}else beep(220,.4)}
 
-function begin(){S={k:0,ok:0,xp:100,combo:0,lock:false,pct:0};show('game');render()}
+function begin(){S={k:0,ok:0,xp:100,combo:0,lock:false,pct:0};show('game');render();musicStart()}
 function start(){name=$('#nm').value.trim();school=$('#sc').value.trim();
 if(name.length<3||school.length<3){$('#err').style.display='block';shake($('#form'));return}
 $('#err').style.display='none';toVideo()}
