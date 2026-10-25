@@ -1,230 +1,236 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detetives da Saúde: Operação Esquistossomose - UEM</title>
-    <!-- Importação de biblioteca para efeitos e ícones se necessário -->
-    <style>
-        :root {
-            --primary: #2980b9;
-            --success: #2ecc71;
-            --danger: #e74c3c;
-            --bg-board: #eef2f3;
-            --gold: #f1c40f;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #74b9ff, #a29bfe);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        .game-wrapper {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            padding: 25px;
-            max-width: 900px;
-            width: 100%;
-            text-align: center;
-            backdrop-filter: blur(10px);
-        }
-
-        h1 { color: #2c3e50; font-size: 28px; margin-bottom: 10px; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
-        .subtitle { color: #57606f; font-size: 15px; margin-bottom: 20px; font-style: italic; }
-
-        /* Form Cadastro Inicial */
-        .setup-screen { display: block; }
-        .input-group { margin: 15px 0; text-align: left; }
-        .input-group label { display: block; font-weight: bold; margin-bottom: 5px; color: #2c3e50; }
-        .input-group input { width: 100%; padding: 12px; border: 2px solid #ced6e0; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
-        
-        /* Tabuleiro Virtual */
-        .game-screen { display: none; }
-        .board-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #dfe4ea;
-            padding: 20px;
-            border-radius: 15px;
-            margin: 20px 0;
-            position: relative;
-            overflow-x: auto;
-            gap: 10px;
-        }
-
-        .board-tile {
-            flex: 1;
-            min-width: 90px;
-            height: 90px;
-            background: white;
-            border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            font-size: 12px;
-            font-weight: bold;
-            border: 3px solid #b2bec3;
-            transition: all 0.3s ease;
-            position: relative;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        }
-
-        .board-tile.active {
-            border-color: var(--primary);
-            background: #e3f2fd;
-            transform: scale(1.08);
-            box-shadow: 0 0 15px rgba(41, 128, 185, 0.5);
-        }
-
-        .board-tile.completed { background: #d4edda; border-color: var(--success); color: #155724; }
-        .tile-icon { font-size: 28px; margin-bottom: 4px; }
-
-        /* Painel da Pergunta */
-        .question-card {
-            background: #ffffff;
-            border: 2px solid #e1e8ed;
-            border-radius: 15px;
-            padding: 25px;
-            margin-top: 20px;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.05);
-            animation: fadeIn 0.5s ease;
-        }
-
-        .question-text { font-size: 18px; font-weight: 600; color: #2c3e50; margin-bottom: 20px; }
-        .options-list { display: flex; flex-direction: column; gap: 12px; }
-        
-        .opt-btn {
-            background: #f8f9fa;
-            border: 2px solid #f1f2f6;
-            padding: 14px 20px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 15px;
-            text-align: left;
-            transition: all 0.2s ease;
-            color: #2f3542;
-        }
-        .opt-btn:hover { background: #ffeaa7; border-color: var(--gold); transform: translateY(-2px); }
-        
-        /* Feedback Visual */
-        .feedback-box { margin-top: 20px; padding: 15px; border-radius: 10px; font-weight: bold; display: none; }
-        .feedback-box.correct { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .feedback-box.wrong { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-
-        /* Botões Gerais */
-        .action-btn {
-            background: linear-gradient(135deg, #2980b9, #3498db);
-            color: white; border: none; padding: 14px 28px; border-radius: 10px;
-            font-size: 16px; font-weight: bold; cursor: pointer; transition: all 0.3s;
-            box-shadow: 0 4px 10px rgba(41,128,185,0.3);
-        }
-        .action-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(41,128,185,0.4); }
-
-        /* Tela Final e Certificado */
-        .end-screen { display: none; }
-        .score-badge { font-size: 48px; font-weight: bold; color: var(--primary); margin: 20px 0; }
-        
-        /* Layout de Impressão do Certificado Oculto na tela */
-        #certificate-print-area { display: none; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#060912">
+<title>Detetives da Saúde: Operação Esquistossomose (UEM)</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🦠%3C/text%3E%3C/svg%3E">
+<style>
+:root{--bg:#060912;--c:#00e5ff;--m:#ff2bd6;--g:#b6ff3b;--r:#ff4d6d;--t:#e8f1ff;--mut:#8da2c4;--mono:ui-monospace,'Cascadia Code',Consolas,Menlo,monospace}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;padding:16px;overflow-x:hidden;color:var(--t);font:16px/1.5 system-ui,'Segoe UI',Roboto,sans-serif;background:radial-gradient(1100px 560px at 15% -10%,#13244f,transparent 60%),radial-gradient(900px 500px at 105% 110%,#3b0f4f,transparent 55%),var(--bg)}
+#bg{position:fixed;inset:0;z-index:0;pointer-events:none}
+.app{position:relative;z-index:1;width:min(920px,100%)}
+.screen{display:none}.screen.on{display:block;animation:in .5s ease}
+.panel{background:rgba(10,16,36,.74);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(0,229,255,.28);border-radius:20px;padding:clamp(18px,4vw,34px);box-shadow:0 0 0 1px rgba(255,43,214,.1),0 24px 70px rgba(0,0,0,.55),inset 0 0 50px rgba(0,229,255,.05)}
+h1,h2{margin:0;line-height:1.05}
+.title{font-size:clamp(2.2rem,8vw,4rem);font-weight:900;letter-spacing:-.03em;background:linear-gradient(100deg,var(--c),var(--m) 60%,var(--g));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 18px rgba(0,229,255,.35))}
+.sub{color:var(--mut);margin:12px 0 18px;max-width:56ch}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.chips span{font-family:var(--mono);font-size:.8rem;padding:5px 12px;border:1px solid #2a3d73;border-radius:99px;color:var(--c);background:rgba(0,229,255,.06)}
+label{display:block;font-weight:600;margin:14px 0 6px}
+input{width:100%;padding:13px 14px;border-radius:12px;border:1px solid #2a3d73;background:#070d20;color:var(--t);font:inherit;outline:none;transition:.2s}
+input:focus{border-color:var(--c);box-shadow:0 0 0 3px rgba(0,229,255,.2)}
+.err{display:none;color:var(--r);margin-top:10px;font-weight:600}
+.btn{margin-top:20px;padding:14px 28px;border:0;border-radius:12px;font:700 1rem/1 inherit;color:#031018;cursor:pointer;background:linear-gradient(100deg,var(--c),var(--g));box-shadow:0 0 24px rgba(0,229,255,.4);transition:.2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 0 34px rgba(0,229,255,.65)}
+.btn.sec{background:transparent;color:var(--c);border:1px solid var(--c);box-shadow:none;margin-left:8px}
+.btn.sec:hover{background:rgba(0,229,255,.1)}
+button:focus-visible{outline:3px solid var(--m);outline-offset:3px}
+#mute{position:fixed;top:12px;right:12px;z-index:5;width:44px;height:44px;border-radius:50%;border:1px solid #2a3d73;background:rgba(10,16,36,.8);color:var(--t);font-size:1.2rem;cursor:pointer}
+.hud{display:flex;gap:10px;flex-wrap:wrap}
+.chip{flex:1;min-width:90px;border:1px solid #24376b;border-radius:12px;padding:8px 14px;background:rgba(255,255,255,.03)}
+.chip small{display:block;color:var(--mut);font-size:.75rem}
+.chip b{font:700 1.3rem var(--mono);color:var(--c);text-shadow:0 0 12px rgba(0,229,255,.6)}
+.board{--s:clamp(42px,9.5vw,58px);position:relative;display:grid;grid-template-columns:repeat(6,1fr);margin:calc(var(--s)*.95) 0 22px}
+.board::before,.fill{content:'';position:absolute;top:calc(var(--s)/2 - 2px);left:8.33%;height:4px;border-radius:4px}
+.board::before{right:8.33%;background:#1b2a4d}
+.fill{width:0;background:linear-gradient(90deg,var(--c),var(--m));box-shadow:0 0 14px var(--c);transition:width .7s}
+.tok{position:absolute;top:calc(var(--s)*-.8);left:8.33%;font-size:1.8rem;z-index:2;transition:left .7s cubic-bezier(.6,-.2,.3,1.2);animation:bob 1.2s ease-in-out infinite;filter:drop-shadow(0 0 10px var(--c))}
+.node{position:relative;text-align:center;font-size:clamp(.62rem,2.2vw,.8rem);color:var(--mut);font-weight:600}
+.node b{display:grid;place-items:center;width:var(--s);height:var(--s);margin:0 auto 6px;border-radius:16px;background:#0b1430;border:2px solid #24376b;font-size:clamp(1.2rem,4vw,1.7rem);transition:.4s}
+.node.on{color:var(--t)}.node.on b{border-color:var(--c);box-shadow:0 0 22px rgba(0,229,255,.7);transform:scale(1.12)}
+.node.done b{border-color:var(--g);background:rgba(182,255,59,.1)}
+.node.done b::after{content:'✓';position:absolute;top:-6px;right:calc(50% - var(--s)/2 - 6px);width:20px;height:20px;border-radius:50%;background:var(--g);color:#031018;font:900 .8rem/20px sans-serif}
+.stage{font-family:var(--mono);color:var(--m);font-size:.85rem}
+.q{font-size:clamp(1.1rem,2.8vw,1.35rem);font-weight:650;margin:6px 0 16px}
+.opts{display:grid;gap:10px}
+.opt{display:flex;gap:12px;align-items:center;text-align:left;background:rgba(255,255,255,.04);border:1px solid #2a3d73;color:var(--t);padding:14px 16px;border-radius:12px;font:inherit;cursor:pointer;transition:.2s}
+.opt kbd{flex:none;display:grid;place-items:center;width:30px;height:30px;border-radius:8px;border:1px solid #35508f;font:700 .9rem var(--mono);color:var(--c)}
+.opt:hover:not(:disabled){border-color:var(--c);background:rgba(0,229,255,.09);transform:translateX(4px)}
+.opt:disabled{cursor:default}
+.opt.ok{border-color:var(--g);background:rgba(182,255,59,.13);box-shadow:0 0 20px rgba(182,255,59,.3)}
+.opt.bad{border-color:var(--r);background:rgba(255,77,109,.13)}
+.info{display:none;margin-top:16px;padding:14px 16px;border-left:3px solid var(--c);background:rgba(0,229,255,.07);border-radius:0 12px 12px 0}
+.info b{display:block;margin-bottom:4px}
+#end{text-align:center}
+.ring{--p:0;width:180px;height:180px;margin:20px auto;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--c),var(--m) calc(var(--p)*1%),#1b2a4d 0);box-shadow:0 0 40px rgba(0,229,255,.3)}
+.ring span{display:grid;place-items:center;width:84%;height:84%;border-radius:50%;background:#070d20;font:800 2.4rem var(--mono);color:var(--t)}
+.rank{font-size:1.5rem;font-weight:800;color:var(--g);text-shadow:0 0 16px rgba(182,255,59,.5)}
+.note{display:none;color:var(--mut);font-size:.9rem;margin-top:10px}
+.shake{animation:shake .4s}
+@keyframes in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,-7px)}}
+@keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+#cert{display:none;background:#fff;color:#222}
+.cb{border:10px double #2980b9;padding:12mm 14mm;text-align:center;font-family:Georgia,serif}
+.cb h1{font-size:26pt;color:#2c3e50;margin:0}
+.cb h3{font-size:11pt;letter-spacing:2px;color:#7f8c8d;margin:6px 0 22px}
+.cb h2{font-size:22pt;font-style:italic;color:#2980b9;margin:0 0 18px}
+.cb p{font-size:13pt;line-height:1.6;text-align:justify;margin:0 0 12px}
+.sig{display:flex;justify-content:space-around;margin-top:34px;font-size:10pt}
+.sig div{border-top:1px solid #7f8c8d;width:60mm;padding-top:4px}
+@media print{@page{size:A4 landscape;margin:10mm}body>*{display:none!important}body>#cert{display:block!important}body{display:block;padding:0;background:#fff}}
+</style>
 </head>
 <body>
+<canvas id="bg"></canvas>
+<button id="mute" aria-label="Ligar ou desligar o som">🔊</button>
 
-<div class="game-wrapper" id="main-card">
-    <!-- TELA 1: CADASTRO -->
-    <div class="setup-screen" id="screen-setup">
-        <h1>🦠 Detetives da Saúde</h1>
-        <div class="subtitle">Missão Maringá Contra a Esquistossomose</div>
-        <p>Olá, Cientista! Insira seus dados para iniciar a jornada pelo tabuleiro da prevenção.</p>
-        
-        <div class="input-group">
-            <label for="student-name">Seu Nome Completo:</label>
-            <input type="text" id="student-name" placeholder="Ex: Pedro Silva dos Santos">
-        </div>
-        <div class="input-group">
-            <label for="school-name">Sua Escola:</label>
-            <input type="text" id="school-name" placeholder="Ex: Escola Municipal Profa. Maria de Lourdes">
-        </div>
-        
-        <button class="action-btn" style="margin-top: 15px;" onclick="startGame()">Começar Missão 🎲</button>
+<main class="app">
+  <section class="screen on panel" id="setup">
+    <div id="form">
+      <h1 class="title">Detetives da Saúde</h1>
+      <p class="sub">Operação Esquistossomose: siga o parasita pelo tabuleiro, quebre o ciclo e conquiste o certificado de Agente da Saúde Mirim.</p>
+      <div class="chips"><span>6 fases</span><span>70% para passar</span><span>certificado em PDF</span></div>
+      <label for="nm">Seu nome completo</label>
+      <input id="nm" autocomplete="off" placeholder="Ex.: Pedro Silva dos Santos">
+      <label for="sc">Sua escola</label>
+      <input id="sc" autocomplete="off" placeholder="Ex.: Escola Municipal Profa. Maria de Lourdes">
+      <div class="err" id="err" role="alert">Preencha seu nome e o da escola para começar.</div>
+      <button class="btn" id="go">Iniciar missão</button>
     </div>
+  </section>
 
-    <!-- TELA 2: TABULEIRO E JOGO -->
-    <div class="game-screen" id="screen-game">
-        <h2 id="player-greeting">Boa sorte, Detetive!</h2>
-        
-        <!-- Tabuleiro -->
-        <div class="board-container">
-            <div class="board-tile active" id="tile-0">
-                <span class="tile-icon">🌊</span><span>1. Lagoa</span>
-            </div>
-            <div class="board-tile" id="tile-1">
-                <span class="tile-icon">🐌</span><span>2. Caramujo</span>
-            </div>
-            <div class="board-tile" id="tile-2">
-                <span class="tile-icon">👣</span><span>3. Invasão</span>
-            </div>
-            <div class="board-tile" id="tile-3">
-                <span class="tile-icon">🫁</span><span>4. Corpo</span>
-            </div>
-            <div class="board-tile" id="tile-4">
-                <span class="tile-icon">🏥</span><span>5. UBS</span>
-            </div>
-            <div class="board-tile" id="tile-5">
-                <span class="tile-icon">🚽</span><span>6. Proteção</span>
-            </div>
-        </div>
-
-        <!-- Card de Questão -->
-        <div class="question-card">
-            <div class="question-text" id="q-text">Carregando desafio...</div>
-            <div class="options-list" id="q-options"></div>
-            <div class="feedback-box" id="q-feedback"></div>
-            <button class="action-btn" id="next-btn" style="display:none; margin: 20px auto 0;" onclick="advanceBoard()">Avançar no Tabuleiro 🎲</button>
-        </div>
+  <section class="screen panel" id="game">
+    <div class="hud">
+      <div class="chip"><small>Fase</small><b id="hFase">1/6</b></div>
+      <div class="chip"><small>Pontos</small><b id="hXp">0</b></div>
+      <div class="chip"><small>Combo</small><b id="hCombo">x0</b></div>
     </div>
-
-    <!-- TELA 3: RESULTADO FINAL -->
-    <div class="end-screen" id="screen-end">
-        <h1>🏆 Missão Cumprida!</h1>
-        <div id="end-status-msg"></div>
-        <div class="score-badge" id="final-score">0%</div>
-        <div id="certificate-action-area"></div>
+    <div class="board" id="board"></div>
+    <div id="qcard">
+      <div class="stage" id="stage"></div>
+      <div class="q" id="q"></div>
+      <div class="opts" id="opts"></div>
+      <div class="info" id="info" aria-live="polite"><b id="infoT"></b><span id="infoX"></span></div>
+      <button class="btn" id="next" style="display:none">Próxima fase</button>
     </div>
+  </section>
+
+  <section class="screen panel" id="end">
+    <h2 class="title" style="font-size:clamp(1.8rem,6vw,2.8rem)">Missão concluída</h2>
+    <div class="ring" id="ring"><span id="pct">0%</span></div>
+    <div class="rank" id="rank"></div>
+    <p id="endMsg" style="max-width:52ch;margin:10px auto"></p>
+    <p id="endXp" style="font-family:var(--mono);color:var(--c)"></p>
+    <button class="btn" id="certBtn">Baixar certificado em PDF</button>
+    <button class="btn sec" id="again">Jogar de novo</button>
+    <button class="btn sec" id="newp">Novo jogador</button>
+    <p class="note" id="certNote">Na janela que abrir, escolha “Salvar como PDF” como destino da impressão.</p>
+  </section>
+</main>
+
+<div id="cert">
+  <div class="cb">
+    <h1>UNIVERSIDADE ESTADUAL DE MARINGÁ</h1>
+    <h3>CURSO DE MEDICINA • DISCIPLINA DE PARASITOLOGIA</h3>
+    <h2>Certificado de Agente da Saúde Mirim</h2>
+    <p>Certificamos que <strong id="cName"></strong>, aluno(a) da instituição <strong id="cSchool"></strong>, concluiu com sucesso o jogo educativo e interativo <strong>“Detetives da Saúde: Operação Esquistossomose”</strong>, realizado como atividade de extensão universitária nas escolas de Maringá-PR.</p>
+    <p>O estudante obteve aproveitamento de <strong id="cScore"></strong> nas tomadas de decisão preventivas e epidemiológicas.</p>
+    <p style="text-align:center;color:#7f8c8d">Maringá, <span id="cDate"></span></p>
+    <div class="sig"><div>Célula de Extensão Acadêmica<br>Acadêmicos de Medicina, UEM</div><div>Disciplina de Parasitologia<br>Curso de Medicina, UEM</div></div>
+  </div>
 </div>
 
-<!-- ÁREA DO CERTIFICADO ESTRUTURADO PARA IMPRESSÃO/PDF -->
-<div id="certificate-print-area">
-    <div style="border: 10px double #2980b9; padding: 40px; text-align: center; font-family: 'Georgia', serif; background: #fff; max-width: 800px; margin: auto;">
-        <h1 style="color: #2c3e50; font-size: 36px; margin-bottom: 5px;">UNIVERSIDADE ESTADUAL DE MARINGÁ</h1>
-        <h3 style="color: #7f8c8d; letter-spacing: 2px; margin-top: 0; font-size: 16px;">CURSO DE MEDICINA • DISCIPLINA DE PARASITOLOGIA</h3>
-        <br><br>
-        <h2 style="color: #2980b9; font-style: italic; font-size: 28px;">Certificado de Agente da Saúde Mirim</h2>
-        <br>
-        <p style="font-size: 18px; line-height: 1.6; color: #333; text-align: justify;">
-            Certificamos com louvor que o(a) aluno(a) <strong id="cert-name" style="text-decoration: underline; color: #000;">[Nome]</strong>, 
-            matriculado(a) na instituição <strong id="cert-school">[Escola]</strong>, completou com sucesso o jogo educativo e interativo 
-            <strong>"Detetives da Saúde: Contra a Esquistossomose"</strong> como atividade prática de extensão universitária nas escolas de Maringá-PR.
-        </p>
-        <p style="font-size: 18px; color: #333;">
-            O estudante obteve um aproveitamento excelente de <strong id="cert-score">0%</strong> nas tomadas de decisão preventivas e epidemiológicas.
-        </p>
-        <br><br>
-        <p style="font-size: 14px; color: #7f8c8d;">Maringá, <span id="cert-date">__/__/____</span></p>
-        <br><br>
-        <div style="display: flex; justify-content: space-around; margin-top: 40px;">
-            <div style="border-top: 1px solid #7f8c8d; width: 250px; padding-top: 5px; font-size: 13px;">
-                Célula de Extensão Acadêmica<br>Acadêmicos de Medicina - UEM
-            </div>
-            <div style="border-top: 1px solid #7f8c8d; width: 250px; padding-top: 5px; font-size: 13px;">
+<script>
+(()=>{
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+/* A primeira opção de cada fase é a correta; a ordem é embaralhada ao jogar. */
+const ST=[
+{i:'🌊',n:'Lagoa',q:'Uma pessoa infectada faz suas necessidades perto de uma lagoa. O que chega à água junto com as fezes?',
+ o:['Ovos do parasita, que eclodem e liberam larvas','Apenas bactérias do ar, sem nenhum parasita','Vírus que passam direto para os peixes'],
+ e:'Os ovos de Schistosoma mansoni saem nas fezes e, na água, eclodem e liberam larvas chamadas miracídios, que procuram um caramujo.'},
+{i:'🐌',n:'Caramujo',q:'O miracídio precisa de um hospedeiro para se multiplicar. Quem faz esse papel?',
+ o:['Caramujos do gênero Biomphalaria','O mosquito Aedes aegypti','Peixes de aquário'],
+ e:'Dentro do caramujo o parasita se multiplica e sai na forma de milhares de cercárias, as larvas que infectam as pessoas.'},
+{i:'👣',n:'Invasão',q:'As cercárias nadam na água. Como elas entram no corpo humano?',
+ o:['Atravessando a pele de quem entra na água contaminada','Pelo ar, quando a pessoa respira perto da lagoa','Pela picada de um mosquito'],
+ e:'Elas penetram pela pele. Nadar, pescar, lavar roupa ou brincar em água com caramujos infectados é situação de risco. Não se pega por abraço ou aperto de mão.'},
+{i:'🩸',n:'Corpo',q:'Sem tratamento por muito tempo, o que a esquistossomose pode causar no corpo?',
+ o:['Aumento do fígado e do baço e a chamada “barriga d’água”','Queda de cabelo e pele azulada','Imunidade para sempre contra a doença'],
+ e:'Os vermes adultos vivem nas veias do intestino e do fígado, e seus ovos causam inflamação. Nos casos graves, fígado e baço aumentam e surge a barriga d’água.'},
+{i:'🏥',n:'UBS',q:'Você teve dor de barriga e diarreia depois de brincar em um rio. Qual o melhor caminho?',
+ o:['Ir à UBS para fazer exame de fezes e receber tratamento pelo SUS','Tomar o remédio que um amigo indicou','Esperar passar sozinho por vários meses'],
+ e:'O diagnóstico é feito por exame parasitológico de fezes e o tratamento é oferecido pelo SUS. Nunca se automedique: só o profissional de saúde indica o remédio.'},
+{i:'🚽',n:'Proteção',q:'Qual ação protege toda a comunidade e quebra o ciclo do parasita?',
+ o:['Saneamento básico: esgoto tratado e nada de fezes perto da água','Jogar sal em toda a água do rio','Passar repelente de insetos'],
+ e:'Sem ovos na água o ciclo não se fecha. Saneamento, água tratada, educação em saúde e evitar águas suspeitas são as melhores armas.'}
+];
+let S,name='',school='',mute=false,AC;
+
+/* Som */
+const beep=(f,d=.12)=>{if(mute)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain();o.frequency.value=f;g.gain.value=.06;o.connect(g);g.connect(AC.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+d);o.stop(AC.currentTime+d)}catch(e){}};
+$('#mute').onclick=e=>{mute=!mute;e.target.textContent=mute?'🔇':'🔊'};
+
+/* Fundo animado e confete */
+const RM=matchMedia('(prefers-reduced-motion:reduce)').matches,cv=$('#bg'),cx=cv.getContext('2d');let P=[],B=[];
+function rs(){cv.width=innerWidth;cv.height=innerHeight;P=Array.from({length:Math.min(70,innerWidth/18|0)},()=>({x:Math.random()*cv.width,y:Math.random()*cv.height,vx:RM?0:(Math.random()-.5)*.4,vy:RM?0:(Math.random()-.5)*.4}))}
+function draw(){cx.clearRect(0,0,cv.width,cv.height);cx.fillStyle=cx.strokeStyle='#00e5ff';
+for(const p of P){p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>cv.width)p.vx*=-1;if(p.y<0||p.y>cv.height)p.vy*=-1;cx.globalAlpha=.6;cx.fillRect(p.x,p.y,2,2)}
+for(let i=0;i<P.length;i++)for(let j=i+1;j<P.length;j++){const d=Math.hypot(P[i].x-P[j].x,P[i].y-P[j].y);if(d<120){cx.globalAlpha=(1-d/120)*.25;cx.beginPath();cx.moveTo(P[i].x,P[i].y);cx.lineTo(P[j].x,P[j].y);cx.stroke()}}
+B=B.filter(b=>b.l>0);for(const b of B){b.x+=b.vx;b.y+=b.vy;b.vy+=.15;b.l--;cx.globalAlpha=Math.min(1,b.l/30);cx.fillStyle=b.c;cx.fillRect(b.x,b.y,5,5)}
+requestAnimationFrame(draw)}
+const burst=(x,y)=>{if(RM)return;for(let i=0;i<46;i++){const a=Math.random()*6.28,v=2+Math.random()*5;B.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-3,l:60+Math.random()*30,c:['#00e5ff','#ff2bd6','#b6ff3b'][i%3]})}};
+addEventListener('resize',rs);rs();draw();
+
+/* Tabuleiro (dados fixos, sem conteúdo do usuário) */
+$('#board').innerHTML='<div class="fill" id="fill"></div><div class="tok" id="tok">🕵️</div>'+ST.map((s,i)=>`<div class="node" id="n${i}"><b>${s.i}</b>${s.n}</div>`).join('');
+
+const show=id=>$$('.screen').forEach(e=>e.classList.toggle('on',e.id===id));
+const shake=el=>{el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake')};
+const hud=()=>{$('#hXp').textContent=S.xp;$('#hCombo').textContent='x'+S.combo};
+
+function render(){const s=ST[S.k];
+$('#hFase').textContent=(S.k+1)+'/6';hud();
+ST.forEach((_,i)=>{const n=$('#n'+i);n.classList.toggle('on',i===S.k);n.classList.toggle('done',i<S.k)});
+$('#tok').style.left=((S.k+.5)/6*100)+'%';$('#fill').style.width=(S.k/5*83.34)+'%';
+$('#stage').textContent='Fase '+(S.k+1)+': '+s.n;$('#q').textContent=s.q;
+const box=$('#opts');box.innerHTML='';
+s.o.map((t,i)=>({t,r:i===0})).sort(()=>Math.random()-.5).forEach((o,j)=>{
+ const b=document.createElement('button');b.className='opt';b.dataset.r=o.r?1:0;
+ const k=document.createElement('kbd');k.textContent='ABC'[j];const sp=document.createElement('span');sp.textContent=o.t;
+ b.append(k,sp);b.onclick=()=>pick(b,o.r);box.append(b)});
+$('#info').style.display='none';$('#next').style.display='none';S.lock=false}
+
+function pick(b,r){if(S.lock)return;S.lock=true;
+$$('.opt').forEach(x=>{x.disabled=true;if(x.dataset.r==='1')x.classList.add('ok')});
+if(r){S.ok++;S.combo++;S.xp+=100+20*(S.combo-1);const q=b.getBoundingClientRect();burst(q.left+q.width/2,q.top+q.height/2);beep(660);setTimeout(()=>beep(880,.18),110)}
+else{S.combo=0;b.classList.add('bad');shake($('#qcard'));beep(180,.3)}
+hud();
+$('#infoT').textContent=r?'Dado confirmado! +'+(100+20*(S.combo-1))+' pontos':'Acesso negado. A resposta certa está em verde.';
+$('#infoX').textContent=ST[S.k].e;$('#info').style.display='block';
+const n=$('#next');n.textContent=S.k===5?'Ver resultado':'Próxima fase';n.style.display='inline-block';n.focus()}
+
+function next(){S.k++;S.k>5?end():render()}
+
+function end(){const pct=Math.round(S.ok/6*100),pass=pct>=70;S.pct=pct;show('end');
+$('#ring').style.setProperty('--p',pct);$('#pct').textContent=pct+'%';
+$('#rank').textContent=pct===100?'Agente Lendário':pass?'Agente Elite':'Recruta em treino';
+$('#endMsg').textContent=pass?'Parabéns, '+name+'! Você quebrou o ciclo da esquistossomose e liberou o seu certificado.':'Quase lá, '+name+'! São necessários pelo menos 70% de acertos para liberar o certificado. Revise o ciclo e tente de novo.';
+$('#endXp').textContent=S.ok+' de 6 acertos, '+S.xp+' pontos';
+$('#certBtn').style.display=pass?'inline-block':'none';$('#certNote').style.display=pass?'block':'none';
+if(pass){beep(523,.15);setTimeout(()=>beep(784,.3),150);burst(innerWidth/2,innerHeight/3)}else beep(220,.4)}
+
+function begin(){S={k:0,ok:0,xp:0,combo:0,lock:false,pct:0};show('game');render()}
+function start(){name=$('#nm').value.trim();school=$('#sc').value.trim();
+if(name.length<3||school.length<3){$('#err').style.display='block';shake($('#form'));return}
+$('#err').style.display='none';begin()}
+
+$('#go').onclick=start;$('#next').onclick=next;$('#again').onclick=begin;
+$('#newp').onclick=()=>{$('#nm').value=$('#sc').value='';show('setup')};
+$('#certBtn').onclick=()=>{$('#cName').textContent=name;$('#cSchool').textContent=school;$('#cScore').textContent=S.pct+'%';
+$('#cDate').textContent=new Date().toLocaleDateString('pt-BR');window.print()};
+
+/* Teclado: 1-3 ou A-C escolhem; Enter avança */
+document.addEventListener('keydown',e=>{if(e.ctrlKey||e.metaKey||e.altKey||e.target.tagName==='BUTTON'&&e.key==='Enter')return;
+const id=$('.screen.on').id;
+if(id==='setup'&&e.key==='Enter')start();
+if(id==='game'){if(e.key.length===1&&!S.lock){const k=Math.max('123'.indexOf(e.key),'abc'.indexOf(e.key.toLowerCase()));if(k>=0&&$$('.opt')[k])$$('.opt')[k].click()}
+ else if(e.key==='Enter'&&S.lock)next()}});
+})();
+</script>
+</body>
+</html>
