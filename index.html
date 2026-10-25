@@ -6,8 +6,9 @@
 <meta name="theme-color" content="#060912">
 <title>Detetives da Saúde: Operação Esquistossomose (UEM)</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🦠%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#060912;--c:#00e5ff;--m:#ff2bd6;--g:#b6ff3b;--r:#ff4d6d;--t:#e8f1ff;--mut:#8da2c4;--mono:ui-monospace,'Cascadia Code',Consolas,Menlo,monospace}
+:root{--bg:#060912;--c:#00e5ff;--m:#ff2bd6;--g:#b6ff3b;--r:#ff4d6d;--t:#e8f1ff;--mut:#8da2c4;--mono:ui-monospace,'Cascadia Code',Consolas,Menlo,monospace;--px:'Press Start 2P',var(--mono)}
 *{box-sizing:border-box}
 body{margin:0;min-height:100vh;display:grid;place-items:center;padding:16px;overflow-x:hidden;color:var(--t);font:16px/1.5 system-ui,'Segoe UI',Roboto,sans-serif;background:radial-gradient(1100px 560px at 15% -10%,#13244f,transparent 60%),radial-gradient(900px 500px at 105% 110%,#3b0f4f,transparent 55%),var(--bg)}
 #bg{position:fixed;inset:0;z-index:0;pointer-events:none}
@@ -33,11 +34,11 @@ button:focus-visible{outline:3px solid var(--m);outline-offset:3px}
 .chip{flex:1;min-width:90px;border:1px solid #24376b;border-radius:12px;padding:8px 14px;background:rgba(255,255,255,.03)}
 .chip small{display:block;color:var(--mut);font-size:.75rem}
 .chip b{font:700 1.3rem var(--mono);color:var(--c);text-shadow:0 0 12px rgba(0,229,255,.6)}
-.board{--s:clamp(42px,9.5vw,58px);position:relative;display:grid;grid-template-columns:repeat(6,1fr);margin:calc(var(--s)*.95) 0 22px}
-.board::before,.fill{content:'';position:absolute;top:calc(var(--s)/2 - 2px);left:8.33%;height:4px;border-radius:4px}
-.board::before{right:8.33%;background:#1b2a4d}
+.board{--s:clamp(30px,6.4vw,52px);position:relative;display:grid;grid-template-columns:repeat(9,1fr);margin:calc(var(--s)*.95) 0 22px}
+.board::before,.fill{content:'';position:absolute;top:calc(var(--s)/2 - 2px);left:5.55%;height:4px;border-radius:4px}
+.board::before{right:5.55%;background:#1b2a4d}
 .fill{width:0;background:linear-gradient(90deg,var(--c),var(--m));box-shadow:0 0 14px var(--c);transition:width .7s}
-.tok{position:absolute;top:calc(var(--s)*-.8);left:8.33%;font-size:1.8rem;z-index:2;transition:left .7s cubic-bezier(.6,-.2,.3,1.2);animation:bob 1.2s ease-in-out infinite;filter:drop-shadow(0 0 10px var(--c))}
+.tok{position:absolute;top:calc(var(--s)*-.8);left:5.55%;font-size:1.8rem;z-index:2;transition:left .7s cubic-bezier(.6,-.2,.3,1.2);animation:bob 1.2s ease-in-out infinite;filter:drop-shadow(0 0 10px var(--c))}
 .node{position:relative;text-align:center;font-size:clamp(.62rem,2.2vw,.8rem);color:var(--mut);font-weight:600}
 .node b{display:grid;place-items:center;width:var(--s);height:var(--s);margin:0 auto 6px;border-radius:16px;background:#0b1430;border:2px solid #24376b;font-size:clamp(1.2rem,4vw,1.7rem);transition:.4s}
 .node.on{color:var(--t)}.node.on b{border-color:var(--c);box-shadow:0 0 22px rgba(0,229,255,.7);transform:scale(1.12)}
@@ -59,6 +60,25 @@ button:focus-visible{outline:3px solid var(--m);outline-offset:3px}
 .ring span{display:grid;place-items:center;width:84%;height:84%;border-radius:50%;background:#070d20;font:800 2.4rem var(--mono);color:var(--t)}
 .rank{font-size:1.5rem;font-weight:800;color:var(--g);text-shadow:0 0 16px rgba(182,255,59,.5)}
 .note{display:none;color:var(--mut);font-size:.9rem;margin-top:10px}
+/* Vídeo */
+.vid{aspect-ratio:16/9;background:#000;border-radius:14px;overflow:hidden;box-shadow:0 0 30px rgba(0,229,255,.35);margin:6px 0 14px}
+.vid iframe{width:100%;height:100%;border:0;display:block}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+/* Fundo de fliperama: sol retrô, grade em perspectiva, estrelas e linhas de CRT */
+#arcade{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity .8s;overflow:hidden;background:linear-gradient(#08011c,#2a0a5c 50%,#7a1fa8 62%)}
+body.arcade #arcade{opacity:1}
+#arcade::before{content:'';position:absolute;left:50%;top:34%;width:min(48vw,360px);aspect-ratio:1;transform:translateX(-50%);border-radius:50%;background:linear-gradient(#fff27a,#ff8a3d 45%,#ff2bd6);box-shadow:0 0 90px rgba(255,43,214,.8);-webkit-mask-image:linear-gradient(#000 45%,transparent 45% 50%,#000 50% 62%,transparent 62% 68%,#000 68% 80%,transparent 80% 86%,#000 86%);mask-image:linear-gradient(#000 45%,transparent 45% 50%,#000 50% 62%,transparent 62% 68%,#000 68% 80%,transparent 80% 86%,#000 86%)}
+#arcade::after{content:'';position:absolute;inset:0 0 38% 0;background:radial-gradient(1.5px 1.5px at 20% 30%,#fff,transparent),radial-gradient(1.5px 1.5px at 70% 15%,#fff,transparent),radial-gradient(1px 1px at 45% 55%,#fff,transparent),radial-gradient(1.5px 1.5px at 88% 50%,#fff,transparent),radial-gradient(1px 1px at 8% 70%,#fff,transparent);background-size:340px 240px;animation:tw 2.4s steps(2) infinite}
+#arcade i{position:absolute;left:0;right:0;bottom:0;height:38%;perspective:240px;overflow:hidden;background:#08011c;border-top:2px solid var(--m);box-shadow:0 -12px 50px rgba(255,43,214,.6)}
+#arcade b{position:absolute;left:-50%;right:-50%;top:0;bottom:-60%;transform:rotateX(62deg);transform-origin:50% 0;background:linear-gradient(90deg,rgba(0,229,255,.75) 2px,transparent 2px) 0 0/64px 64px,linear-gradient(rgba(0,229,255,.75) 2px,transparent 2px) 0 0/64px 64px;animation:flow 1s linear infinite}
+body.arcade::after{content:'';position:fixed;inset:0;z-index:4;pointer-events:none;background:repeating-linear-gradient(transparent 0 2px,rgba(0,0,0,.13) 2px 3px)}
+body.arcade .panel{background:rgba(10,5,34,.82);border-color:var(--m);box-shadow:0 0 0 2px #08011c,0 0 0 4px var(--c),0 0 46px rgba(255,43,214,.4)}
+body.arcade .chip b{font-family:var(--px);font-size:1rem}
+body.arcade .stage{font-family:var(--px);font-size:.7rem;line-height:1.7}
+body.arcade .rank{font-family:var(--px);font-size:1rem;line-height:1.6}
+@keyframes flow{to{background-position:0 64px,0 64px}}
+@keyframes tw{50%{opacity:.55}}
+@media(max-width:520px){.node{font-size:0}.node b{font-size:.95rem;border-radius:10px}}
 .shake{animation:shake .4s}
 @keyframes in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 @keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,-7px)}}
@@ -72,10 +92,11 @@ button:focus-visible{outline:3px solid var(--m);outline-offset:3px}
 .cb p{font-size:13pt;line-height:1.6;text-align:justify;margin:0 0 12px}
 .sig{display:flex;justify-content:space-around;margin-top:34px;font-size:10pt}
 .sig div{border-top:1px solid #7f8c8d;width:60mm;padding-top:4px}
-@media print{@page{size:A4 landscape;margin:10mm}body>*{display:none!important}body>#cert{display:block!important}body{display:block;padding:0;background:#fff}}
+@media print{@page{size:A4 landscape;margin:10mm}body>*,body::after{display:none!important}body>#cert{display:block!important}body{display:block;padding:0;background:#fff}}
 </style>
 </head>
 <body>
+<div id="arcade"><i><b></b></i></div>
 <canvas id="bg"></canvas>
 <button id="mute" aria-label="Ligar ou desligar o som">🔊</button>
 
@@ -84,7 +105,7 @@ button:focus-visible{outline:3px solid var(--m);outline-offset:3px}
     <div id="form">
       <h1 class="title">Detetives da Saúde</h1>
       <p class="sub">Operação Esquistossomose: siga o parasita pelo tabuleiro, quebre o ciclo e conquiste o certificado de Agente da Saúde Mirim.</p>
-      <div class="chips"><span>6 fases</span><span>70% para passar</span><span>certificado em PDF</span></div>
+      <div class="chips"><span>vídeo + 9 fases</span><span>1000 pontos</span><span>70% para passar</span><span>certificado em PDF</span></div>
       <label for="nm">Seu nome completo</label>
       <input id="nm" autocomplete="off" placeholder="Ex.: Pedro Silva dos Santos">
       <label for="sc">Sua escola</label>
@@ -94,11 +115,20 @@ button:focus-visible{outline:3px solid var(--m);outline-offset:3px}
     </div>
   </section>
 
+  <section class="screen panel" id="video">
+    <h2 class="title" style="font-size:clamp(1.7rem,5.5vw,2.6rem)">Operação 1: assista ao vídeo</h2>
+    <p class="sub">Antes das perguntas, assista ao vídeo até o final. Ele vale <b>100 pontos</b> e ajuda você nas próximas fases. A missão completa soma 1000 pontos: o vídeo mais 9 perguntas de 100.</p>
+    <div class="vid"><div id="yt"></div></div>
+    <p class="note" style="display:block">O vídeo não apareceu? <a id="ytl" href="https://youtu.be/a7N3ipaPsnI" target="_blank" rel="noopener" style="color:var(--c)">Abra no YouTube</a>, assista até o fim e volte aqui.</p>
+    <button class="btn sec" id="vSeen" style="display:none;margin:12px 0 0">Já assisti pelo YouTube</button>
+    <button class="btn" id="vGo" disabled>Assista ao vídeo para continuar</button>
+  </section>
+
   <section class="screen panel" id="game">
     <div class="hud">
-      <div class="chip"><small>Fase</small><b id="hFase">1/6</b></div>
-      <div class="chip"><small>Pontos</small><b id="hXp">0</b></div>
-      <div class="chip"><small>Combo</small><b id="hCombo">x0</b></div>
+      <div class="chip"><small>Fase</small><b id="hFase">1/9</b></div>
+      <div class="chip"><small>Pontos</small><b id="hXp">100</b></div>
+      <div class="chip"><small>Sequência</small><b id="hCombo">x0</b></div>
     </div>
     <div class="board" id="board"></div>
     <div id="qcard">
@@ -149,17 +179,27 @@ const ST=[
 {i:'👣',n:'Invasão',q:'As cercárias nadam na água. Como elas entram no corpo humano?',
  o:['Atravessando a pele de quem entra na água contaminada','Pelo ar, quando a pessoa respira perto da lagoa','Pela picada de um mosquito'],
  e:'Elas penetram pela pele. Nadar, pescar, lavar roupa ou brincar em água com caramujos infectados é situação de risco. Não se pega por abraço ou aperto de mão.'},
+/* Fases novas (Coceira, Sem sinais, Águas): conferir com o vídeo e ajustar se preciso. */
+{i:'😣',n:'Coceira',q:'Pouco depois de nadar em uma lagoa, aparecem manchas vermelhas que coçam muito na pele. O que pode ter acontecido?',
+ o:['As larvas do parasita atravessaram a pele e causaram a dermatite cercariana, a “coceirinha”','Só suor e calor, então não precisa se preocupar','Sinal de que a água estava limpa e segura'],
+ e:'A “coceirinha” aparece onde as cercárias atravessaram a pele. Se isso acontecer depois de contato com água suspeita, avise um adulto e procure a UBS.'},
 {i:'🩸',n:'Corpo',q:'Sem tratamento por muito tempo, o que a esquistossomose pode causar no corpo?',
  o:['Aumento do fígado e do baço e a chamada “barriga d’água”','Queda de cabelo e pele azulada','Imunidade para sempre contra a doença'],
  e:'Os vermes adultos vivem nas veias do intestino e do fígado, e seus ovos causam inflamação. Nos casos graves, fígado e baço aumentam e surge a barriga d’água.'},
+{i:'🤫',n:'Sem sinais',q:'Seu primo entrou na mesma lagoa e não sente nada. Isso quer dizer que ele está livre da doença?',
+ o:['Não: muita gente infectada não sente nada no começo e pode eliminar ovos nas fezes','Sim: sem sintoma, ninguém pode ter a doença','Sim: só quem tem barriga d’água pode transmitir'],
+ e:'A esquistossomose pode ser silenciosa por muito tempo. Quem teve contato com água suspeita deve fazer o exame de fezes, mesmo sem sintomas.'},
 {i:'🏥',n:'UBS',q:'Você teve dor de barriga e diarreia depois de brincar em um rio. Qual o melhor caminho?',
  o:['Ir à UBS para fazer exame de fezes e receber tratamento pelo SUS','Tomar o remédio que um amigo indicou','Esperar passar sozinho por vários meses'],
  e:'O diagnóstico é feito por exame parasitológico de fezes e o tratamento é oferecido pelo SUS. Nunca se automedique: só o profissional de saúde indica o remédio.'},
+{i:'🏞️',n:'Águas',q:'Qual destes lugares oferece mais risco de esquistossomose?',
+ o:['Lagoa ou rio de água doce, parado ou lento, perto de esgoto e de caramujos','Piscina com água tratada e com cloro','Água do mar, em uma praia'],
+ e:'O ciclo depende de água doce com caramujos e de esgoto sem tratamento. Piscinas tratadas e o mar salgado não são locais de transmissão.'},
 {i:'🚽',n:'Proteção',q:'Qual ação protege toda a comunidade e quebra o ciclo do parasita?',
  o:['Saneamento básico: esgoto tratado e nada de fezes perto da água','Jogar sal em toda a água do rio','Passar repelente de insetos'],
  e:'Sem ovos na água o ciclo não se fecha. Saneamento, água tratada, educação em saúde e evitar águas suspeitas são as melhores armas.'}
 ];
-let S,name='',school='',mute=false,AC;
+let S,name='',school='',mute=false,AC,AR=false,vDone=false,ytL=false;
 
 /* Som */
 const beep=(f,d=.12)=>{if(mute)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain();o.frequency.value=f;g.gain.value=.06;o.connect(g);g.connect(AC.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+d);o.stop(AC.currentTime+d)}catch(e){}};
@@ -169,8 +209,8 @@ $('#mute').onclick=e=>{mute=!mute;e.target.textContent=mute?'🔇':'🔊'};
 const RM=matchMedia('(prefers-reduced-motion:reduce)').matches,cv=$('#bg'),cx=cv.getContext('2d');let P=[],B=[];
 function rs(){cv.width=innerWidth;cv.height=innerHeight;P=Array.from({length:Math.min(70,innerWidth/18|0)},()=>({x:Math.random()*cv.width,y:Math.random()*cv.height,vx:RM?0:(Math.random()-.5)*.4,vy:RM?0:(Math.random()-.5)*.4}))}
 function draw(){cx.clearRect(0,0,cv.width,cv.height);cx.fillStyle=cx.strokeStyle='#00e5ff';
-for(const p of P){p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>cv.width)p.vx*=-1;if(p.y<0||p.y>cv.height)p.vy*=-1;cx.globalAlpha=.6;cx.fillRect(p.x,p.y,2,2)}
-for(let i=0;i<P.length;i++)for(let j=i+1;j<P.length;j++){const d=Math.hypot(P[i].x-P[j].x,P[i].y-P[j].y);if(d<120){cx.globalAlpha=(1-d/120)*.25;cx.beginPath();cx.moveTo(P[i].x,P[i].y);cx.lineTo(P[j].x,P[j].y);cx.stroke()}}
+if(!AR)for(const p of P){p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>cv.width)p.vx*=-1;if(p.y<0||p.y>cv.height)p.vy*=-1;cx.globalAlpha=.6;cx.fillRect(p.x,p.y,2,2)}
+if(!AR)for(let i=0;i<P.length;i++)for(let j=i+1;j<P.length;j++){const d=Math.hypot(P[i].x-P[j].x,P[i].y-P[j].y);if(d<120){cx.globalAlpha=(1-d/120)*.25;cx.beginPath();cx.moveTo(P[i].x,P[i].y);cx.lineTo(P[j].x,P[j].y);cx.stroke()}}
 B=B.filter(b=>b.l>0);for(const b of B){b.x+=b.vx;b.y+=b.vy;b.vy+=.15;b.l--;cx.globalAlpha=Math.min(1,b.l/30);cx.fillStyle=b.c;cx.fillRect(b.x,b.y,5,5)}
 requestAnimationFrame(draw)}
 const burst=(x,y)=>{if(RM)return;for(let i=0;i<46;i++){const a=Math.random()*6.28,v=2+Math.random()*5;B.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-3,l:60+Math.random()*30,c:['#00e5ff','#ff2bd6','#b6ff3b'][i%3]})}};
@@ -179,14 +219,14 @@ addEventListener('resize',rs);rs();draw();
 /* Tabuleiro (dados fixos, sem conteúdo do usuário) */
 $('#board').innerHTML='<div class="fill" id="fill"></div><div class="tok" id="tok">🕵️</div>'+ST.map((s,i)=>`<div class="node" id="n${i}"><b>${s.i}</b>${s.n}</div>`).join('');
 
-const show=id=>$$('.screen').forEach(e=>e.classList.toggle('on',e.id===id));
+const show=id=>{AR=id!=='setup';document.body.classList.toggle('arcade',AR);$$('.screen').forEach(e=>e.classList.toggle('on',e.id===id))};
 const shake=el=>{el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake')};
 const hud=()=>{$('#hXp').textContent=S.xp;$('#hCombo').textContent='x'+S.combo};
 
 function render(){const s=ST[S.k];
-$('#hFase').textContent=(S.k+1)+'/6';hud();
+$('#hFase').textContent=(S.k+1)+'/9';hud();
 ST.forEach((_,i)=>{const n=$('#n'+i);n.classList.toggle('on',i===S.k);n.classList.toggle('done',i<S.k)});
-$('#tok').style.left=((S.k+.5)/6*100)+'%';$('#fill').style.width=(S.k/5*83.34)+'%';
+$('#tok').style.left=((S.k+.5)/9*100)+'%';$('#fill').style.width=(S.k/8*88.89)+'%';
 $('#stage').textContent='Fase '+(S.k+1)+': '+s.n;$('#q').textContent=s.q;
 const box=$('#opts');box.innerHTML='';
 s.o.map((t,i)=>({t,r:i===0})).sort(()=>Math.random()-.5).forEach((o,j)=>{
@@ -197,29 +237,32 @@ $('#info').style.display='none';$('#next').style.display='none';S.lock=false}
 
 function pick(b,r){if(S.lock)return;S.lock=true;
 $$('.opt').forEach(x=>{x.disabled=true;if(x.dataset.r==='1')x.classList.add('ok')});
-if(r){S.ok++;S.combo++;S.xp+=100+20*(S.combo-1);const q=b.getBoundingClientRect();burst(q.left+q.width/2,q.top+q.height/2);beep(660);setTimeout(()=>beep(880,.18),110)}
+if(r){S.ok++;S.combo++;S.xp+=100;const q=b.getBoundingClientRect();burst(q.left+q.width/2,q.top+q.height/2);beep(660);setTimeout(()=>beep(880,.18),110)}
 else{S.combo=0;b.classList.add('bad');shake($('#qcard'));beep(180,.3)}
 hud();
-$('#infoT').textContent=r?'Dado confirmado! +'+(100+20*(S.combo-1))+' pontos':'Acesso negado. A resposta certa está em verde.';
+$('#infoT').textContent=r?'Dado confirmado! +100 pontos':'Acesso negado. A resposta certa está em verde.';
 $('#infoX').textContent=ST[S.k].e;$('#info').style.display='block';
-const n=$('#next');n.textContent=S.k===5?'Ver resultado':'Próxima fase';n.style.display='inline-block';n.focus()}
+const n=$('#next');n.textContent=S.k===8?'Ver resultado':'Próxima fase';n.style.display='inline-block';n.focus()}
 
-function next(){S.k++;S.k>5?end():render()}
+function next(){S.k++;S.k>8?end():render()}
 
-function end(){const pct=Math.round(S.ok/6*100),pass=pct>=70;S.pct=pct;show('end');
+function end(){const pct=Math.round(S.xp/10),pass=pct>=70;S.pct=pct;show('end');
 $('#ring').style.setProperty('--p',pct);$('#pct').textContent=pct+'%';
 $('#rank').textContent=pct===100?'Agente Lendário':pass?'Agente Elite':'Recruta em treino';
-$('#endMsg').textContent=pass?'Parabéns, '+name+'! Você quebrou o ciclo da esquistossomose e liberou o seu certificado.':'Quase lá, '+name+'! São necessários pelo menos 70% de acertos para liberar o certificado. Revise o ciclo e tente de novo.';
-$('#endXp').textContent=S.ok+' de 6 acertos, '+S.xp+' pontos';
+$('#endMsg').textContent=pass?'Parabéns, '+name+'! Você quebrou o ciclo da esquistossomose e liberou o seu certificado.':'Quase lá, '+name+'! São necessários pelo menos 700 pontos (70%) para liberar o certificado. Revise o ciclo e tente de novo.';
+$('#endXp').textContent=S.ok+' de 9 perguntas certas, '+S.xp+' de 1000 pontos';
 $('#certBtn').style.display=pass?'inline-block':'none';$('#certNote').style.display=pass?'block':'none';
 if(pass){beep(523,.15);setTimeout(()=>beep(784,.3),150);burst(innerWidth/2,innerHeight/3)}else beep(220,.4)}
 
-function begin(){S={k:0,ok:0,xp:0,combo:0,lock:false,pct:0};show('game');render()}
+function begin(){S={k:0,ok:0,xp:100,combo:0,lock:false,pct:0};show('game');render()}
 function start(){name=$('#nm').value.trim();school=$('#sc').value.trim();
 if(name.length<3||school.length<3){$('#err').style.display='block';shake($('#form'));return}
-$('#err').style.display='none';begin()}
+$('#err').style.display='none';toVideo()}
+function toVideo(){vDone=false;const g=$('#vGo');g.disabled=true;g.textContent='Assista ao vídeo para continuar';$('#vSeen').style.display='none';show('video');
+if(!ytL){ytL=true;window.onYouTubeIframeAPIReady=()=>new YT.Player('yt',{videoId:'a7N3ipaPsnI',playerVars:{rel:0,playsinline:1},events:{onStateChange:e=>{if(e.data===0)videoOK()}}});const sc=document.createElement('script');sc.src='https://www.youtube.com/iframe_api';document.head.append(sc)}}
+function videoOK(){if(vDone)return;vDone=true;beep(523,.12);setTimeout(()=>beep(784,.25),130);const g=$('#vGo');g.disabled=false;g.textContent='Receber 100 pontos e começar';$('#vSeen').style.display='none'}
 
-$('#go').onclick=start;$('#next').onclick=next;$('#again').onclick=begin;
+$('#go').onclick=start;$('#next').onclick=next;$('#again').onclick=begin;$('#vGo').onclick=begin;$('#ytl').onclick=()=>{$('#vSeen').style.display='inline-block'};$('#vSeen').onclick=videoOK;
 $('#newp').onclick=()=>{$('#nm').value=$('#sc').value='';show('setup')};
 $('#certBtn').onclick=()=>{$('#cName').textContent=name;$('#cSchool').textContent=school;$('#cScore').textContent=S.pct+'%';
 $('#cDate').textContent=new Date().toLocaleDateString('pt-BR');window.print()};
