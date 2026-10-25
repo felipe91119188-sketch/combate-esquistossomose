@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detetives da Saúde: Operação Esquistossomose - UEM</title>
+    <!-- Importação de biblioteca para efeitos e ícones se necessário -->
+    <style>
+        :root {
+            --primary: #2980b9;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --bg-board: #eef2f3;
+            --gold: #f1c40f;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #74b9ff, #a29bfe);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .game-wrapper {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            padding: 25px;
+            max-width: 900px;
+            width: 100%;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        h1 { color: #2c3e50; font-size: 28px; margin-bottom: 10px; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
+        .subtitle { color: #57606f; font-size: 15px; margin-bottom: 20px; font-style: italic; }
+
+        /* Form Cadastro Inicial */
+        .setup-screen { display: block; }
+        .input-group { margin: 15px 0; text-align: left; }
+        .input-group label { display: block; font-weight: bold; margin-bottom: 5px; color: #2c3e50; }
+        .input-group input { width: 100%; padding: 12px; border: 2px solid #ced6e0; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
+        
+        /* Tabuleiro Virtual */
+        .game-screen { display: none; }
+        .board-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #dfe4ea;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            position: relative;
+            overflow-x: auto;
+            gap: 10px;
+        }
+
+        .board-tile {
+            flex: 1;
+            min-width: 90px;
+            height: 90px;
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            font-weight: bold;
+            border: 3px solid #b2bec3;
+            transition: all 0.3s ease;
+            position: relative;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .board-tile.active {
+            border-color: var(--primary);
+            background: #e3f2fd;
+            transform: scale(1.08);
+            box-shadow: 0 0 15px rgba(41, 128, 185, 0.5);
+        }
+
+        .board-tile.completed { background: #d4edda; border-color: var(--success); color: #155724; }
+        .tile-icon { font-size: 28px; margin-bottom: 4px; }
+
+        /* Painel da Pergunta */
+        .question-card {
+            background: #ffffff;
+            border: 2px solid #e1e8ed;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.05);
+            animation: fadeIn 0.5s ease;
+        }
+
+        .question-text { font-size: 18px; font-weight: 600; color: #2c3e50; margin-bottom: 20px; }
+        .options-list { display: flex; flex-direction: column; gap: 12px; }
+        
+        .opt-btn {
+            background: #f8f9fa;
+            border: 2px solid #f1f2f6;
+            padding: 14px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 15px;
+            text-align: left;
+            transition: all 0.2s ease;
+            color: #2f3542;
+        }
+        .opt-btn:hover { background: #ffeaa7; border-color: var(--gold); transform: translateY(-2px); }
+        
+        /* Feedback Visual */
+        .feedback-box { margin-top: 20px; padding: 15px; border-radius: 10px; font-weight: bold; display: none; }
+        .feedback-box.correct { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .feedback-box.wrong { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+        /* Botões Gerais */
+        .action-btn {
+            background: linear-gradient(135deg, #2980b9, #3498db);
+            color: white; border: none; padding: 14px 28px; border-radius: 10px;
+            font-size: 16px; font-weight: bold; cursor: pointer; transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(41,128,185,0.3);
+        }
+        .action-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(41,128,185,0.4); }
+
+        /* Tela Final e Certificado */
+        .end-screen { display: none; }
+        .score-badge { font-size: 48px; font-weight: bold; color: var(--primary); margin: 20px 0; }
+        
+        /* Layout de Impressão do Certificado Oculto na tela */
+        #certificate-print-area { display: none; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<div class="game-wrapper" id="main-card">
+    <!-- TELA 1: CADASTRO -->
+    <div class="setup-screen" id="screen-setup">
+        <h1>🦠 Detetives da Saúde</h1>
+        <div class="subtitle">Missão Maringá Contra a Esquistossomose</div>
+        <p>Olá, Cientista! Insira seus dados para iniciar a jornada pelo tabuleiro da prevenção.</p>
+        
+        <div class="input-group">
+            <label for="student-name">Seu Nome Completo:</label>
+            <input type="text" id="student-name" placeholder="Ex: Pedro Silva dos Santos">
+        </div>
+        <div class="input-group">
+            <label for="school-name">Sua Escola:</label>
+            <input type="text" id="school-name" placeholder="Ex: Escola Municipal Profa. Maria de Lourdes">
+        </div>
+        
+        <button class="action-btn" style="margin-top: 15px;" onclick="startGame()">Começar Missão 🎲</button>
+    </div>
+
+    <!-- TELA 2: TABULEIRO E JOGO -->
+    <div class="game-screen" id="screen-game">
+        <h2 id="player-greeting">Boa sorte, Detetive!</h2>
+        
+        <!-- Tabuleiro -->
+        <div class="board-container">
+            <div class="board-tile active" id="tile-0">
+                <span class="tile-icon">🌊</span><span>1. Lagoa</span>
+            </div>
+            <div class="board-tile" id="tile-1">
+                <span class="tile-icon">🐌</span><span>2. Caramujo</span>
+            </div>
+            <div class="board-tile" id="tile-2">
+                <span class="tile-icon">👣</span><span>3. Invasão</span>
+            </div>
+            <div class="board-tile" id="tile-3">
+                <span class="tile-icon">🫁</span><span>4. Corpo</span>
+            </div>
+            <div class="board-tile" id="tile-4">
+                <span class="tile-icon">🏥</span><span>5. UBS</span>
+            </div>
+            <div class="board-tile" id="tile-5">
+                <span class="tile-icon">🚽</span><span>6. Proteção</span>
+            </div>
+        </div>
+
+        <!-- Card de Questão -->
+        <div class="question-card">
+            <div class="question-text" id="q-text">Carregando desafio...</div>
+            <div class="options-list" id="q-options"></div>
+            <div class="feedback-box" id="q-feedback"></div>
+            <button class="action-btn" id="next-btn" style="display:none; margin: 20px auto 0;" onclick="advanceBoard()">Avançar no Tabuleiro 🎲</button>
+        </div>
+    </div>
+
+    <!-- TELA 3: RESULTADO FINAL -->
+    <div class="end-screen" id="screen-end">
+        <h1>🏆 Missão Cumprida!</h1>
+        <div id="end-status-msg"></div>
+        <div class="score-badge" id="final-score">0%</div>
+        <div id="certificate-action-area"></div>
+    </div>
+</div>
+
+<!-- ÁREA DO CERTIFICADO ESTRUTURADO PARA IMPRESSÃO/PDF -->
+<div id="certificate-print-area">
+    <div style="border: 10px double #2980b9; padding: 40px; text-align: center; font-family: 'Georgia', serif; background: #fff; max-width: 800px; margin: auto;">
+        <h1 style="color: #2c3e50; font-size: 36px; margin-bottom: 5px;">UNIVERSIDADE ESTADUAL DE MARINGÁ</h1>
+        <h3 style="color: #7f8c8d; letter-spacing: 2px; margin-top: 0; font-size: 16px;">CURSO DE MEDICINA • DISCIPLINA DE PARASITOLOGIA</h3>
+        <br><br>
+        <h2 style="color: #2980b9; font-style: italic; font-size: 28px;">Certificado de Agente da Saúde Mirim</h2>
+        <br>
+        <p style="font-size: 18px; line-height: 1.6; color: #333; text-align: justify;">
+            Certificamos com louvor que o(a) aluno(a) <strong id="cert-name" style="text-decoration: underline; color: #000;">[Nome]</strong>, 
+            matriculado(a) na instituição <strong id="cert-school">[Escola]</strong>, completou com sucesso o jogo educativo e interativo 
+            <strong>"Detetives da Saúde: Contra a Esquistossomose"</strong> como atividade prática de extensão universitária nas escolas de Maringá-PR.
+        </p>
+        <p style="font-size: 18px; color: #333;">
+            O estudante obteve um aproveitamento excelente de <strong id="cert-score">0%</strong> nas tomadas de decisão preventivas e epidemiológicas.
+        </p>
+        <br><br>
+        <p style="font-size: 14px; color: #7f8c8d;">Maringá, <span id="cert-date">__/__/____</span></p>
+        <br><br>
+        <div style="display: flex; justify-content: space-around; margin-top: 40px;">
+            <div style="border-top: 1px solid #7f8c8d; width: 250px; padding-top: 5px; font-size: 13px;">
+                Célula de Extensão Acadêmica<br>Acadêmicos de Medicina - UEM
+            </div>
+            <div style="border-top: 1px solid #7f8c8d; width: 250px; padding-top: 5px; font-size: 13px;">
